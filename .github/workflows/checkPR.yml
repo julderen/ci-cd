@@ -36,7 +36,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4 # v4.0.0
 
-      - uses: ./.github/actions/node-npm-setup
+      - uses: ./.github/actions/js-npm-install
 
       - name: Run linter
         run: npm run lint
