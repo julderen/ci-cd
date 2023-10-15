@@ -1,4 +1,4 @@
-name: Lint code
+name: spread check PR
 
 # **What it does**: Lints our code to ensure the code matches the specified code style.
 # **Why we have it**: We want some level of consistency to our code.
@@ -30,25 +30,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-code:
-    if: github.repository == 'github/docs-internal' || github.repository == 'github/docs'
-    runs-on: ${{ fromJSON('["ubuntu-latest", "ubuntu-20.04-xl"]')[github.repository == 'github/docs-internal'] }}
+  eslint:
+    runs-on: "ubuntu-latest"
     steps:
       - name: Check out repo
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: '20.x'
+          registry-url: https://registry.npmjs.org
 
-      - uses: ./.github/actions/node-npm-setup
+      - run: npm ci
 
       - name: Run linter
         run: npm run lint
 
-      - name: Run Prettier
-        run: npm run prettier-check
+  types:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          always-auth: true
+          node-version: '20.x'
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
 
       - name: Run TypeScript
         run: npm run tsc
 
-      - uses: ./.github/actions/slack-alert
+  test:
+    runs-on: "ubuntu-latest"
+    needs: [eslint, types]
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
-          slack_channel_id: ${{ secrets.DOCS_ALERTS_SLACK_CHANNEL_ID }}
-          slack_token: ${{ secrets.SLACK_DOCS_BOT_TOKEN }}
+          always-auth: true
+          node-version: '20.x'
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      - name: Run Test
+        run: npm run test
