@@ -47,6 +47,13 @@ jobs:
       - name: Run linter
         run: npm run lint
 
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@1.0.4
+        if: always()
+        with:
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          report-json: 'eslint_report.json'
+
       - name: Run TypeScript
         run: npm run tsc
 
