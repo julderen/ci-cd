@@ -1,4 +1,4 @@
-name: simple check PR
+name: spread check PR
 
 # **What it does**: Lints our code to ensure the code matches the specified code style.
 # **Why we have it**: We want some level of consistency to our code.
