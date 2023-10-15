@@ -25,6 +25,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "eslint --output-file eslint_report.json --format json src",
+    "tsc": "tsc --noEmit",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
