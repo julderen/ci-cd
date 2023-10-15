@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   lint-code:
-    runs-on: "ubuntu-latest"
+    uses: actions/setup-node@v3
     steps:
       - name: Check out repo
         uses: actions/checkout@v4 # v4.0.0
